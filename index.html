@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Matter | Autonomous Server Log Investigator AI Agent</title>
+  <meta name="description" content="Dark Matter is an autonomous DevOps &amp; SRE AI agent powered by local Qwen 2.5 7B. Detect 504 timeouts, TLS certificate errors, and Elasticsearch drops in minutes.">
+  <link rel="canonical" href="https://dark-matter-ai.local/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Dark Matter | Autonomous Server Log Investigator AI Agent">
+  <meta property="og:description" content="Investigate and solve server, container, and application incidents autonomously with Dark Matter and local Qwen 2.5 7B.">
+  <meta property="og:url" content="https://dark-matter-ai.local/">
+  <meta property="og:site_name" content="Dark Matter AI">
+  <meta property="og:image" content="https://dark-matter-ai.local/assets/icon.svg">
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dark Matter | Autonomous Server Log Investigator AI Agent">
+  <meta name="twitter:description" content="Autonomous DevOps &amp; SRE Server Log Investigator AI Agent powered by local Qwen 2.5 7B.">
+  <meta name="twitter:image" content="https://dark-matter-ai.local/assets/icon.svg">
+
+  <!-- Robots & AI Crawlers -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+  <!-- JSON-LD Structured Data: SoftwareApplication, FAQPage, Organization, BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://dark-matter-ai.local/#software",
+        "name": "Dark Matter",
+        "operatingSystem": "Windows, Linux, macOS",
+        "applicationCategory": "DeveloperApplication",
+        "softwareVersion": "1.0.0",
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        },
+        "description": "Dark Matter is an autonomous DevOps & SRE AI agent powered by local Qwen 2.5 7B to investigate, diagnose, and pinpoint root causes in server and application logs.",
+        "author": {
+          "@type": "Person",
+          "name": "Ranadeep Saha",
+          "email": "ranadeep2021saha@gmail.com",
+          "url": "https://www.linkedin.com/in/ranadeep-saha-a03296404"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://dark-matter-ai.local/#organization",
+        "name": "Dark Matter AI",
+        "url": "https://dark-matter-ai.local/",
+        "logo": "https://dark-matter-ai.local/assets/icon.svg",
+        "sameAs": [
+          "https://github.com/docker/docker-agent",
+          "https://docker.github.io/docker-agent/",
+          "https://youtu.be/jrP2DDxy3rE"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://dark-matter-ai.local/#breadcrumbs",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://dark-matter-ai.local/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Dark Matter Investigator",
+            "item": "https://dark-matter-ai.local/#overview"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://dark-matter-ai.local/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Dark Matter?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dark Matter is an autonomous site reliability engineering and log investigation AI agent that runs declarative YAML workflows on local Qwen 2.5 7B via Ollama."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Dark Matter require cloud API keys or external subscriptions?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Dark Matter connects directly to local Ollama on localhost, providing 100% private, free, and air-gapped log investigation without sending logs to cloud services."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What types of log errors does Dark Matter detect?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Dark Matter inspects HTTP 5xx errors (500, 502, 503, 504), TLS/SSL certificate expirations and handshake failures, connection timeouts, Elasticsearch cluster exceptions, and filesystem permission issues."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #07090e;
+      --bg-surface: #0f131d;
+      --bg-elevated: #161b28;
+      --border: #202738;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-indigo: #818cf8;
+      --accent-violet: #a855f7;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background-color: rgba(15, 19, 29, 0.85);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+      display: block;
+    }
+
+    .brand-badge {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.15));
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent-cyan);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 4.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    /* Aesthetic Glowing Logo Showcase */
+    .hero-logo-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 1.75rem;
+    }
+
+    .hero-logo-aura {
+      position: absolute;
+      inset: -12px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(129, 140, 248, 0.3) 40%, rgba(168, 85, 247, 0.1) 70%, transparent 100%);
+      filter: blur(18px);
+      border-radius: 32px;
+      animation: pulseAura 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseAura {
+      0% { transform: scale(0.95); opacity: 0.6; }
+      100% { transform: scale(1.1); opacity: 0.95; }
+    }
+
+    .hero-logo-img {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.4);
+      display: block;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 0.4rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 850;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lead {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 2.25rem;
+    }
+
+    .cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      min-height: 48px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #030712;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.75rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: #fff;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .code-box {
+      background: #04060a;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0 3rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      line-height: 1.7;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Terminal Showcase with Highlighted ASCII Typography */
+    .terminal-showcase {
+      max-width: 760px;
+      margin: 2.75rem auto 0;
+      background: #0a0e17;
+      border: 1px solid #1f293d;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.15);
+      text-align: left;
+    }
+
+    .terminal-header {
+      background: #111726;
+      padding: 0.75rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e2638;
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .terminal-title {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .terminal-badge {
+      font-size: 0.72rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      font-weight: 600;
+    }
+
+    .ascii-art {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: clamp(0.6rem, 1.35vw, 0.95rem);
+      line-height: 1.25;
+      color: #83a598;
+      background: #090c13;
+      padding: 1.75rem 1rem;
+      margin: 0;
+      overflow-x: auto;
+      text-align: center;
+      text-shadow: 0 0 14px rgba(131, 165, 152, 0.5);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .terminal-footer {
+      background: #111726;
+      padding: 0.65rem 1.1rem;
+      font-size: 0.8rem;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-top: 1px solid #1e2638;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .terminal-status-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #4ade80;
+      display: inline-block;
+    }
+
+    /* Author & Maintainer Showcase */
+    .author-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 1rem;
+      padding: 2.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(56, 189, 248, 0.12);
+      max-width: 760px;
+      margin: 0 auto 3rem;
+    }
+
+    .author-info h3 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-weight: 700;
+    }
+
+    .author-role {
+      color: var(--accent-cyan);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .author-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .author-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.65rem 1.2rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .author-link.gmail {
+      background: rgba(234, 67, 53, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(234, 67, 53, 0.35);
+    }
+
+    .author-link.gmail:hover {
+      background: rgba(234, 67, 53, 0.25);
+      border-color: #f87171;
+      transform: translateY(-1px);
+    }
+
+    .author-link.linkedin {
+      background: rgba(14, 118, 168, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(14, 118, 168, 0.35);
+    }
+
+    .author-link.linkedin:hover {
+      background: rgba(14, 118, 168, 0.25);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    .faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .faq-item h4 {
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-item p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="/" class="brand">
+        <img src="assets/icon.svg" alt="Dark Matter Logo" class="brand-icon">
+        <span>Dark Matter</span>
+        <span class="brand-badge">Autonomous SRE</span>
+      </a>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#configuration">Configuration</a>
+        <a href="#quickstart">Quickstart</a>
+        <a href="#faq">FAQ</a>
+        <a href="#author">Author</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <div class="hero-logo-wrapper">
+        <div class="hero-logo-aura"></div>
+        <img src="assets/icon.svg" alt="Dark Matter Aesthetic Icon" class="hero-logo-img">
+      </div>
+
+      <div class="hero-pill">
+        <span>🌌 Dark Matter &bull; 100% Local Inference &bull; Qwen 2.5 7B</span>
+      </div>
+      <h1>Dark Matter AI Agent</h1>
+      <p class="lead">
+        Autonomous SRE and log investigator agent. Parses production logs in seconds to diagnose HTTP 504 timeouts, Elasticsearch disconnects, and TLS certificate failures with zero cloud API keys.
+      </p>
+      <div class="cta-group">
+        <a href="#quickstart" class="btn btn-primary">Start Investigation</a>
+        <a href="#configuration" class="btn btn-secondary">Inspect agent.yaml</a>
+      </div>
+
+      <!-- Terminal Showcase with Highlighted ASCII Typography -->
+      <div class="terminal-showcase">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="terminal-title">dark-matter &mdash; terminal &mdash; 80x24</span>
+          <span class="terminal-badge">Local Qwen 2.5 7B</span>
+        </div>
+        <pre class="ascii-art">
+      ____        _       ____   _  __
+     |  _ \      / \     |  _ \ | |/ /
+     | | | |    / _ \    | |_) || ' / 
+     | |_| |   / ___ \   |  _ < | . \ 
+     |____/   /_/   \_\  |_| \_\|_|\_\
+
+      __  __     _     _____  _____  _____  ____  
+     |  \/  |   / \   |_   _||_   _|| ____||  _ \ 
+     | |\/| |  / _ \    | |    | |  |  _|  | |_) |
+     | |  | | / ___ \   | |    | |  | |___ |  _ < 
+     |_|  |_|/_/   \_\  |_|    |_|  |_____||_| \_\
+        </pre>
+        <div class="terminal-footer">
+          <span class="terminal-status-dot"></span>
+          <span>dark-matter (ollama/qwen2.5:7b) &bull; Always Awake: Active &bull; Ready for queries</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="capabilities" style="padding-top: 4rem;">
+      <h2 class="section-title">Core Diagnostic Capabilities</h2>
+      <p class="section-desc">Automated incident analysis driven by Docker Agent toolsets and local Qwen 2.5 7B reasoning.</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3 style="color: var(--accent-rose);">HTTP 5xx &amp; Gateway Timeouts</h3>
+          <p>Pinpoints 500, 502, 503, and 504 gateway timeouts across microservice pipelines with latency breakdown.</p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--accent-amber);">TLS &amp; Certificate Expirations</h3>
+          <p>Detects expired SSL certificates, handshake failures, and untrusted authority chains before services crash.</p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--accent-cyan);">Database &amp; Cluster Exceptions</h3>
+          <p>Identifies Elasticsearch connection refused exceptions, connection pool exhaustion, and memory spikes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="configuration">
+      <h2 class="section-title">Dark Matter Agent Specification</h2>
+      <p class="section-desc">Defined declaratively in <code>agent.yaml</code> using Docker Agent and local Ollama.</p>
+
+      <div class="code-box">
+<span style="color: #64748b;"># agent.yaml - Dark Matter Autonomous SRE Agent</span>
+<span style="color: #38bdf8;">version</span>: 4
+
+<span style="color: #38bdf8;">metadata</span>:
+  <span style="color: #e2e8f0;">description</span>: "Dark Matter - Autonomous Server Log Investigator AI Agent"
+  <span style="color: #e2e8f0;">author</span>: "Codedigipt"
+  <span style="color: #e2e8f0;">version</span>: 1.0.0
+
+<span style="color: #38bdf8;">providers</span>:
+  <span style="color: #34d399;">ollama</span>:
+    <span style="color: #e2e8f0;">api_type</span>: openai_chatcompletions
+    <span style="color: #e2e8f0;">base_url</span>: http://127.0.0.1:11434/v1
+
+<span style="color: #38bdf8;">models</span>:
+  <span style="color: #34d399;">qwen</span>:
+    <span style="color: #e2e8f0;">provider</span>: ollama
+    <span style="color: #e2e8f0;">model</span>: qwen2.5:7b
+
+<span style="color: #38bdf8;">agents</span>:
+  <span style="color: #34d399;">root</span>:
+    <span style="color: #e2e8f0;">model</span>: qwen
+    <span style="color: #e2e8f0;">description</span>: "Dark Matter - Autonomous Server Log Investigator AI Agent"
+    <span style="color: #e2e8f0;">instruction</span>: "Investigate server logs, build incident timelines, and pinpoint root causes."
+    <span style="color: #e2e8f0;">toolsets</span>:
+      - <span style="color: #e2e8f0;">type</span>: filesystem
+      - <span style="color: #e2e8f0;">type</span>: shell
+      - <span style="color: #e2e8f0;">type</span>: think
+      - <span style="color: #e2e8f0;">type</span>: todo
+      </div>
+    </section>
+
+    <section id="quickstart">
+      <h2 class="section-title">Quickstart Commands</h2>
+      <p class="section-desc">Run Dark Matter interactively in your terminal or trigger automated CLI analysis.</p>
+
+      <div class="code-box">
+<span style="color: #64748b;"># 1. Start Dark Matter interactively</span>
+.\run.ps1
+<span style="color: #64748b;"># or directly:</span>
+docker agent run ./agent.yaml
+
+<span style="color: #64748b;"># 2. Run automated headless investigation</span>
+docker agent run ./agent.yaml --exec --safety autonomous "Analyze sample.log and find root causes"
+
+<span style="color: #64748b;"># 3. Run companion regex pattern scanner</span>
+python analyze_logs.py sample.log
+      </div>
+    </section>
+
+    <section id="faq" style="padding-top: 3rem;">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-desc">Details regarding Dark Matter architecture and local Qwen 2.5 inference.</p>
+
+      <div class="faq-item">
+        <h4>What is Dark Matter?</h4>
+        <p>Dark Matter is an autonomous SRE and server log investigation AI agent that runs declarative YAML workflows on local Qwen 2.5 7B via Ollama.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>Does Dark Matter send any log data to the cloud?</h4>
+        <p>No. Dark Matter connects directly to local Ollama on localhost (`http://127.0.0.1:11434/v1`), keeping 100% of your logs and incident data private on your own machine.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4>How does Dark Matter find root causes?</h4>
+        <p>Dark Matter uses its `filesystem` toolset to inspect log files, its `shell` toolset to run pattern scripts, and its `think` scratchpad to deduce incident timelines and root causes.</p>
+      </div>
+    </section>
+
+    <section id="author" style="padding-top: 3.5rem;">
+      <h2 class="section-title">Creator &amp; Lead Maintainer</h2>
+      <p class="section-desc">Dark Matter is created and maintained by Ranadeep Saha.</p>
+
+      <div class="author-card">
+        <div class="author-info">
+          <h3>Ranadeep Saha</h3>
+          <p class="author-role">Creator &amp; AI Systems Engineer</p>
+          <div class="author-links">
+            <a href="mailto:ranadeep2021saha@gmail.com" class="author-link gmail">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              ranadeep2021saha@gmail.com
+            </a>
+            <a href="https://www.linkedin.com/in/ranadeep-saha-a03296404" target="_blank" rel="noopener noreferrer" class="author-link linkedin">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c.92 0 1.66-.74 1.66-1.66 0-.92-.74-1.66-1.66-1.66-.92 0-1.66.74-1.66 1.66 0 .92.74 1.66 1.66 1.66m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+              linkedin.com/in/ranadeep-saha-a03296404
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Dark Matter AI &bull; Created by <strong>Ranadeep Saha</strong> &bull; Powered by Qwen 2.5 7B</p>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+      <a href="mailto:ranadeep2021saha@gmail.com" style="color: var(--accent-cyan); text-decoration: none;">ranadeep2021saha@gmail.com</a> &bull;
+      <a href="https://www.linkedin.com/in/ranadeep-saha-a03296404" target="_blank" rel="noopener noreferrer" style="color: var(--accent-indigo); text-decoration: none;">LinkedIn Profile</a>
+    </p>
+  </footer>
+
+</body>
+</html>
