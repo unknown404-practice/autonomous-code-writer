@@ -1,0 +1,51 @@
+name: CI Validation
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Validate agent.yaml Syntax
+        run: |
+          python -c "
+          import yaml
+          with open('agent.yaml', 'r') as f:
+              data = yaml.safe_load(f)
+          assert data.get('version') == 4, 'agent.yaml must specify version: 4'
+          assert 'agents' in data, 'agents mapping missing'
+          assert 'dark-matter' in data['agents'], 'dark-matter agent missing'
+          print('agent.yaml is valid!')
+          "
+
+      - name: Validate analyze_logs.py with sample.log
+        run: |
+          python analyze_logs.py sample.log
+
+      - name: Validate Launcher Scripts
+        run: |
+          test -f run.sh
+          test -f run.bat
+          test -f run.ps1
+          test -f Modelfile
+          test -f LICENSE
+          test -f README.md
+          echo "All essential repository assets verified!"
