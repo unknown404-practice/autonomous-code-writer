@@ -1,0 +1,18 @@
+2026-11-06 08:00:01.120 [INFO] [main] org.example.server.ServerApplication - Starting ServerApplication v2.4.1 on prod-web-01 with PID 4812
+2026-11-06 08:00:03.450 [INFO] [main] org.example.server.config.SecurityConfig - Initializing OAuth2 and TLS 1.3 security filter chain
+2026-11-06 08:00:04.890 [INFO] [main] org.example.server.ServerApplication - Tomcat initialized with port 8080 (http)
+2026-11-06 08:05:12.302 [INFO] [http-nio-8080-exec-1] org.example.server.api.ApiController - GET /api/v1/health status=200 duration=4ms client=10.0.0.15
+2026-11-06 08:07:33.411 [INFO] [http-nio-8080-exec-2] org.example.server.api.ApiController - GET /api/v1/users/profile status=200 duration=18ms client=192.168.1.55
+2026-11-06 08:12:45.602 [INFO] [http-nio-8080-exec-3] org.example.server.api.OrderController - POST /api/v1/checkout/process status=200 duration=142ms client=172.16.4.12
+2026-11-06 08:14:10.015 [WARN] [http-nio-8080-exec-4] org.example.server.db.ConnectionPool - Database connection checkout took 850ms, approaching threshold (1000ms)
+2026-11-06 08:15:22.780 [ERROR] [http-nio-8080-exec-5] org.example.server.service.PaymentService - [HTTP-504] 504 Gateway Timeout: Upstream service 'payment-gateway.internal' failed to respond within 30000ms timeout window. Transaction ID: txn_9847291a
+2026-11-06 08:15:23.010 [ERROR] [http-nio-8080-exec-5] org.example.server.api.OrderController - POST /api/v1/checkout/process status=504 duration=30005ms error="Gateway Timeout"
+2026-11-06 08:16:01.320 [WARN] [monitoring-thread] org.example.server.system.MetricsReporter - JVM Heap memory usage reached 88.4% (Allocated: 7.2GB / Max: 8.0GB)
+2026-11-06 08:16:45.912 [CRITICAL] [search-indexing-worker] org.elasticsearch.client.RestClient - [ES-TIMEOUT] ElasticsearchException: Connection refused to cluster node at 10.0.1.42:9200. Failed after 3 retries (ConnectTimeoutException: 5000ms elapsed).
+2026-11-06 08:16:46.104 [ERROR] [search-indexing-worker] org.example.server.indexer.CatalogIndexer - Failed to update search index for catalog batch #412. Queue backlog size: 1420 items.
+2026-11-06 08:17:15.550 [ERROR] [auth-sync-worker] javax.net.ssl.SSLHandshakeException - [TLS-CERT-FAIL] PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target (host: auth.identity-corp.internal:8443). Certificate expired on 2026-11-05T23:59:59Z.
+2026-11-06 08:17:16.002 [WARN] [auth-sync-worker] org.example.server.auth.TokenValidator - Falling back to cached public key set for JWT validation. Token validation may degrade in 15 minutes.
+2026-11-06 08:18:02.115 [WARN] [monitoring-thread] org.example.server.system.MetricsReporter - JVM Heap memory usage reached 93.1% (Allocated: 7.45GB / Max: 8.0GB). Triggering major Garbage Collection.
+2026-11-06 08:19:10.880 [ERROR] [audit-logger-thread] java.io.IOException - [PERM-DENIED] PermissionDenied: java.nio.file.AccessDeniedException: /var/log/app/security-audit.log (permission denied for service account 'app-daemon')
+2026-11-06 08:20:00.001 [INFO] [http-nio-8080-exec-6] org.example.server.api.ApiController - GET /api/v1/health status=200 duration=3ms client=10.0.0.15
+2026-11-06 08:20:05.412 [ERROR] [http-nio-8080-exec-7] org.example.server.api.ApiController - GET /api/v1/search?q=laptop status=503 error="Service Unavailable: Search engine unreachable" duration=5021ms
