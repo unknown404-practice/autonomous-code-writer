@@ -1,8 +1,6 @@
 # robots.txt for Dark Matter AI Agent
 User-agent: *
 Allow: /
-Disallow: /scratch/
-Disallow: /tmp/
 
 # AI Search Engine Crawlers
 User-agent: GPTBot
@@ -17,4 +15,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://dark-matter-ai.local/sitemap.xml
+Sitemap: https://unknown404-practice.github.io/autonomous-code-writer/sitemap.xml

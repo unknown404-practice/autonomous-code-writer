@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://dark-matter-ai.local/</loc>
-    <lastmod>2026-11-06T17:00:00+00:00</lastmod>
+    <loc>https://unknown404-practice.github.io/autonomous-code-writer/</loc>
+    <lastmod>2026-11-06T21:40:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://dark-matter-ai.local/#overview</loc>
-    <lastmod>2026-11-06T17:00:00+00:00</lastmod>
+    <loc>https://unknown404-practice.github.io/autonomous-code-writer/#overview</loc>
+    <lastmod>2026-11-06T21:40:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dark-matter-ai.local/#configuration</loc>
-    <lastmod>2026-11-06T17:00:00+00:00</lastmod>
+    <loc>https://unknown404-practice.github.io/autonomous-code-writer/#source-code</loc>
+    <lastmod>2026-11-06T21:40:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://unknown404-practice.github.io/autonomous-code-writer/#configuration</loc>
+    <lastmod>2026-11-06T21:40:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dark-matter-ai.local/#faq</loc>
-    <lastmod>2026-11-06T17:00:00+00:00</lastmod>
+    <loc>https://unknown404-practice.github.io/autonomous-code-writer/#quickstart</loc>
+    <lastmod>2026-11-06T21:40:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://unknown404-practice.github.io/autonomous-code-writer/#author</loc>
+    <lastmod>2026-11-06T21:40:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
