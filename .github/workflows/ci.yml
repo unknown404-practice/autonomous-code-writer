@@ -40,8 +40,10 @@ jobs:
           "
 
       - name: Run Pytest Suite
+        env:
+          PYTHONPATH: .
         run: |
-          pytest tests/ -v
+          python -m pytest tests/ -v
 
       - name: Validate analyze_logs.py CLI Arguments
         run: |

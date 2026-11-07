@@ -1,6 +1,13 @@
+import sys
 import json
 import pytest
 from pathlib import Path
+
+# Ensure repo root is in sys.path when invoked via pytest in any CI/CD environment
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from analyze_logs import analyze_log_file, parse_args
 
 def test_analyze_sample_log():
