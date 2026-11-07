@@ -1436,19 +1436,29 @@
           </div>
 <pre><code id="code-agent-yaml">version: 4
 
+metadata:
+  description: "Dark Matter - Autonomous Server Log Investigator AI Agent"
+  author: Ranadeep Saha
+  version: 1.0.0
+
+providers:
+  ollama:
+    api_type: openai_chatcompletions
+    base_url: http://127.0.0.1:11434/v1
+
 models:
-  qwen:
+  dark-matter:
     provider: ollama
-    model: qwen2.5:7b
+    model: dark-matter
 
 agents:
   dark-matter:
-    model: qwen
-    description: "Dark Matter 🌌 - Autonomous Server Log Investigator AI Agent"
+    model: dark-matter
+    description: "Dark Matter - Autonomous Server Log Investigator AI Agent"
     instruction: |
-      You are Dark Matter 🌌, an elite autonomous Server Log Investigator and SRE AI agent.
-      Your mission is to inspect server logs, identify anomalies, detect root causes,
-      reconstruct incident timelines, and generate remediation plans.
+      You are Dark Matter (🌌), an expert site reliability engineer (SRE) and autonomous DevOps investigator.
+      When greeting or responding, identify as Dark Matter with your signature cosmic icon 🌌.
+      Your mission is to investigate and analyze server, application, and Docker logs.
     toolsets:
       - type: filesystem
       - type: shell
@@ -1496,8 +1506,11 @@ Always maintain high technical precision, structured markdown output, and priori
 <pre><code id="code-runps1"># Ensure Ollama keeps models loaded indefinitely in memory (Always Awake)
 $env:OLLAMA_KEEP_ALIVE = "-1"
 
-# Check &amp; pre-warm Qwen 2.5 7B
-$null = Invoke-RestMethod -Uri "http://127.0.0.1:11434/api/generate" -Method Post -Body '{"model": "qwen2.5:7b", "keep_alive": -1}' -ContentType "application/json" -TimeoutSec 5 -ErrorAction SilentlyContinue
+# Compile Dark Matter tuned SRE model from Modelfile
+&amp; ollama create dark-matter -f (Join-Path $PSScriptRoot "Modelfile")
+
+# Pre-warm Dark Matter SRE model
+$null = Invoke-RestMethod -Uri "http://127.0.0.1:11434/api/generate" -Method Post -Body '{"model": "dark-matter", "keep_alive": -1}' -ContentType "application/json" -TimeoutSec 5 -ErrorAction SilentlyContinue
 
 # Launch Dark Matter TUI
 $agentYaml = Join-Path $PSScriptRoot "agent.yaml"
@@ -1514,11 +1527,14 @@ $agentYaml = Join-Path $PSScriptRoot "agent.yaml"
               <a href="https://github.com/unknown404-practice/autonomous-code-writer/blob/main/run.bat" target="_blank" rel="noopener noreferrer" class="btn-action-pill">Open on GitHub &nearr;</a>
             </div>
           </div>
-<pre><code id="code-runbat">:: Pin Qwen in memory indefinitely (Always Awake)
+<pre><code id="code-runbat">:: Pin model in memory indefinitely (Always Awake)
 set OLLAMA_KEEP_ALIVE=-1
 
-:: Pre-warm model for zero cold-start
-curl -s -m 5 -X POST http://127.0.0.1:11434/api/generate -d "{\"model\": \"qwen2.5:7b\", \"keep_alive\": -1}" &gt;nul 2&gt;&amp;1
+:: Compile Dark Matter tuned SRE model from Modelfile
+ollama create dark-matter -f "%~dp0Modelfile"
+
+:: Pre-warm Dark Matter model for zero cold-start
+curl -s -m 5 -X POST http://127.0.0.1:11434/api/generate -d "{\"model\": \"dark-matter\", \"keep_alive\": -1}" &gt;nul 2&gt;&amp;1
 
 :: Launch Dark Matter
 docker agent run --app-name "Dark Matter" "%~dp0agent.yaml" %*
@@ -1537,8 +1553,11 @@ docker agent run --app-name "Dark Matter" "%~dp0agent.yaml" %*
 <pre><code id="code-runsh">#!/usr/bin/env bash
 export OLLAMA_KEEP_ALIVE="-1"
 
-# Pre-warm Qwen 2.5 7B
-curl -s -m 5 -X POST http://127.0.0.1:11434/api/generate -d '{"model": "qwen2.5:7b", "keep_alive": -1}' &amp;&gt;/dev/null || true
+# Compile Dark Matter tuned SRE model from Modelfile
+ollama create dark-matter -f "$DIR/Modelfile"
+
+# Pre-warm Dark Matter SRE model
+curl -s -m 5 -X POST http://127.0.0.1:11434/api/generate -d '{"model": "dark-matter", "keep_alive": -1}' &amp;&gt;/dev/null || true
 
 # Execute agent
 docker agent run --app-name "Dark Matter" "$DIR/agent.yaml" "$@"

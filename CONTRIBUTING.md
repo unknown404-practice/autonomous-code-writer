@@ -17,8 +17,8 @@ We are committed to providing a welcoming, inclusive, and harassment-free enviro
 
 2. **Clone Your Fork**
    ```bash
-   git clone https://github.com/<your-username>/Dark-Matter.git
-   cd Dark-Matter
+   git clone https://github.com/<your-username>/autonomous-code-writer.git
+   cd autonomous-code-writer
    ```
 
 3. **Create a Feature Branch**

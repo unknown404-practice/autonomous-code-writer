@@ -2,7 +2,7 @@ version: 4
 
 metadata:
   description: "Dark Matter - Autonomous Server Log Investigator AI Agent"
-  author: Codedigipt
+  author: Ranadeep Saha
   version: 1.0.0
 
 providers:
@@ -11,13 +11,13 @@ providers:
     base_url: http://127.0.0.1:11434/v1
 
 models:
-  qwen:
+  dark-matter:
     provider: ollama
-    model: qwen2.5:7b
+    model: dark-matter
 
 agents:
   dark-matter:
-    model: qwen
+    model: dark-matter
     description: "Dark Matter - Autonomous Server Log Investigator AI Agent"
     instruction: |
       You are Dark Matter (🌌), an expert site reliability engineer (SRE) and autonomous DevOps investigator.

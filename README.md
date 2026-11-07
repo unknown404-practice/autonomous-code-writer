@@ -205,8 +205,8 @@ Before launching Dark Matter, ensure your host environment meets the minimum har
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/Dark-Matter.git
-cd Dark-Matter
+git clone https://github.com/unknown404-practice/autonomous-code-writer.git
+cd autonomous-code-writer
 ```
 
 ### 2. Launch Dark Matter
@@ -339,19 +339,29 @@ Dark Matter is governed by [agent.yaml](agent.yaml) using the Docker Agent v4 sp
 ```yaml
 version: 4
 
+metadata:
+  description: "Dark Matter - Autonomous Server Log Investigator AI Agent"
+  author: Ranadeep Saha
+  version: 1.0.0
+
+providers:
+  ollama:
+    api_type: openai_chatcompletions
+    base_url: http://127.0.0.1:11434/v1
+
 models:
-  qwen:
+  dark-matter:
     provider: ollama
-    model: qwen2.5:7b
+    model: dark-matter
 
 agents:
   dark-matter:
-    model: qwen
-    description: "Dark Matter 🌌 - Autonomous Server Log Investigator AI Agent"
+    model: dark-matter
+    description: "Dark Matter - Autonomous Server Log Investigator AI Agent"
     instruction: |
-      You are Dark Matter 🌌, an elite autonomous Server Log Investigator and SRE AI agent.
-      Your mission is to inspect server logs, identify anomalies, detect root causes,
-      and provide actionable remediation plans.
+      You are Dark Matter (🌌), an expert site reliability engineer (SRE) and autonomous DevOps investigator.
+      When greeting or responding, identify as Dark Matter with your signature cosmic icon 🌌.
+      Your mission is to investigate and analyze server, application, and Docker logs.
     toolsets:
       - type: filesystem
       - type: shell

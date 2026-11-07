@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    name: Lint & Validate
+    name: Lint, Test & Validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -22,7 +22,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyyaml
+          pip install pyyaml pytest
 
       - name: Validate agent.yaml Syntax
         run: |
@@ -31,21 +31,38 @@ jobs:
           with open('agent.yaml', 'r') as f:
               data = yaml.safe_load(f)
           assert data.get('version') == 4, 'agent.yaml must specify version: 4'
+          assert 'providers' in data, 'providers mapping missing'
+          assert 'models' in data, 'models mapping missing'
+          assert 'dark-matter' in data['models'], 'dark-matter model missing'
           assert 'agents' in data, 'agents mapping missing'
           assert 'dark-matter' in data['agents'], 'dark-matter agent missing'
           print('agent.yaml is valid!')
           "
 
-      - name: Validate analyze_logs.py with sample.log
+      - name: Run Pytest Suite
         run: |
-          python analyze_logs.py sample.log
+          pytest tests/ -v
 
-      - name: Validate Launcher Scripts
+      - name: Validate analyze_logs.py CLI Arguments
+        run: |
+          python analyze_logs.py --json sample.log
+          python analyze_logs.py sample.log --json
+          python analyze_logs.py --help
+
+      - name: Test Launcher Dry Run
+        run: |
+          chmod +x run.sh
+          ./run.sh --dry-run
+
+      - name: Validate Launcher Scripts & Documentation Assets
         run: |
           test -f run.sh
           test -f run.bat
           test -f run.ps1
           test -f Modelfile
+          test -f .gitignore
           test -f LICENSE
           test -f README.md
+          test -f CONTRIBUTING.md
+          test -f SECURITY.md
           echo "All essential repository assets verified!"
