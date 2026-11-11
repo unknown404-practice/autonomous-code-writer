@@ -118,6 +118,11 @@ if ! command -v docker &>/dev/null; then
     exit 1
 fi
 
+# Ensure Dark Matter TUI typography is configured
+if [[ -f "$DIR/scripts/setup_typography.py" ]]; then
+    python3 "$DIR/scripts/setup_typography.py" &>/dev/null || python "$DIR/scripts/setup_typography.py" &>/dev/null || true
+fi
+
 echo " [OK] Launching Dark Matter TUI..."
 echo ""
 

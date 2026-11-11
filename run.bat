@@ -139,6 +139,14 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
+:: Ensure Dark Matter TUI typography is configured
+where python >nul 2>&1
+if !ERRORLEVEL! equ 0 (
+    if exist "%~dp0scripts\setup_typography.py" (
+        python "%~dp0scripts\setup_typography.py" >nul 2>&1
+    )
+)
+
 echo  [OK] Launching Dark Matter TUI...
 echo.
 

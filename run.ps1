@@ -1,4 +1,4 @@
-# Dark Matter - Server Log Investigator Launcher
+﻿# Dark Matter - Server Log Investigator Launcher
 # Runs Dark Matter AI Agent using local Ollama and Docker Agent
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -161,6 +161,12 @@ if (-not $dockerAgent) {
         Read-Host "Press Enter to exit..."
     }
     exit 1
+}
+
+# Ensure Dark Matter TUI typography is configured
+$typoScript = Join-Path $PSScriptRoot "scripts\setup_typography.py"
+if (Test-Path $typoScript) {
+    & python $typoScript 2>$null
 }
 
 Write-Host " [OK] Launching Dark Matter TUI..." -ForegroundColor Cyan
